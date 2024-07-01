@@ -67,8 +67,12 @@ can overlap the margin."
 (defun pj--get-window-width ()
   "Get usable window width in pixels."
   (-let* (((left _ right) (window-pixel-edges))
-          ((fleft fright) (window-fringes)))
-    (- (- right fright) (+ left fleft))))
+          ((fleft fright) (window-fringes))
+	  (left-margin  (car (window-margins)))
+	  (right-margin  (cdr (window-margins)))
+	  (mleft (if left-margin (* (frame-char-width) left-margin) 0))
+	  (mright (if right-margin (* (frame-char-width) right-margin) 0)))
+    (- (- right fright mright) (+ left fleft mleft))))
 
 (defun pj--get-working-window-width ()
   "Get usable window width minus a working buffer in pixels."
